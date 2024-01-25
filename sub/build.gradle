@@ -1,0 +1,63 @@
+plugins {
+    id "io.spring.dependency-management" version "1.1.4" apply false
+    id 'idea'
+}
+
+version = "1.0-SNAPSHOT"
+
+ext {
+    moduleProjects = subprojects.findAll { it.name.startsWith("sub-") } - project(":sub-bom")
+    javaProjects = subprojects - project(":sub-bom")
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+configure(allprojects) { project ->
+    apply plugin: "io.spring.dependency-management"
+
+    dependencyManagement {
+        imports {
+        }
+
+        dependencies {
+        }
+
+        generatedPomCustomization {
+            enabled = false
+        }
+
+        repositories {
+            mavenCentral()
+        }
+    }
+}
+
+configure(javaProjects) { prj ->
+    group = "org.sub"
+
+    apply plugin: "java"
+
+
+    sourceSets.configureEach { sourceSet ->
+        tasks.named(sourceSet.compileJavaTaskName).configure {
+            options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/$sourceSet.name")
+        }
+    }
+
+
+    dependencies {
+    }
+}
+
+
+configure(rootProject) {
+    description = "Sub Project"
+
+    group = "org.sub"
+}
+

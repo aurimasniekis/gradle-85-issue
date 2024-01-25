@@ -1,0 +1,6 @@
+rootProject.name = 'main'
+
+includeBuild "${rootDir}/../sub"
+
+include 'main-bom'
+include 'main-main'

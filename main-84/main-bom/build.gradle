@@ -1,0 +1,23 @@
+description = "Sub (Bill of Materials)"
+
+apply plugin: 'java-platform'
+apply plugin: "maven-publish"
+
+group = "org.sub"
+
+dependencies {
+    constraints {
+        parent.moduleProjects.sort { "$it.name" }.each {
+            api it
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'sub-bom'
+            from components.javaPlatform
+        }
+    }
+}
